@@ -1,0 +1,1 @@
+Bootstrapped from https://github.com/dolph/dictionary

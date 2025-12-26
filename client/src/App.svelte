@@ -1,12 +1,50 @@
 <script>
   // Game state
-  let currentWord = '';
-  let foundWords = [];
-  let score = 0;
+  let currentWord = $state('');
+  let minWordLength = $state(4);
+  let foundWords = $state([]);
+  let score = $state(0);
+  let validWords = $state([]);
+  let isLoadingDictionary = $state(true);
+  
+  // Notification system
+  let notification = $state({ show: false, message: 'Blank', type: 'error' });
+  let notificationTimeout;
 
   // Puzzle letters (will be configurable later)
-  let letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  let letters = $state(['A', 'B', 'C', 'D', 'E', 'F', 'G']);
   let centerLetter = 'A'; // Required letter
+
+  // Fetch valid words from API
+  async function fetchDictionary() {
+    try {
+      const response = await fetch('/api/dictionary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ letters, minLength: minWordLength })
+      });
+      const data = await response.json();
+      validWords = data.validWords;
+      isLoadingDictionary = false;
+      console.log(`Loaded ${validWords.length} valid words`);
+    } catch (error) {
+      console.error('Error fetching dictionary:', error);
+      showNotification('Error loading dictionary', 'error');
+      isLoadingDictionary = false;
+    }
+  }
+
+  // Load dictionary on mount
+  fetchDictionary();
+
+  // Helper function to show notifications
+  function showNotification(message, type = 'error', duration = 2000) {
+    clearTimeout(notificationTimeout);
+    notification = { show: true, message, type };
+    notificationTimeout = setTimeout(() => {
+      notification = { ...notification, show: false };
+    }, duration);
+  }
 
   // Button handlers
   function handleLetterClick(letter) {
@@ -25,12 +63,35 @@
   }
 
   function handleEnter() {
-    // TODO: Validate word and update score
-    if (currentWord.length >= 4) {
-      foundWords = [...foundWords, currentWord];
-      score += currentWord.length;
-      currentWord = '';
+    const proposedWord = currentWord.trim().toUpperCase();
+
+    if (proposedWord.length < minWordLength) {
+      showNotification(`Too short! Words must be at least ${minWordLength} letters.`, 'error');
+      return;
     }
+
+    // Check if word already found
+    if (foundWords.some(w => w.toUpperCase() === proposedWord)) {
+      showNotification('Already found!', 'info');
+      return;
+    }
+
+    // Check if word is in valid dictionary
+    if (!validWords.includes(proposedWord)) {
+      showNotification('Not in word list!', 'error');
+      return;
+    }
+
+    // Valid word!
+    foundWords = [...foundWords, proposedWord];
+    if (proposedWord.length === minWordLength) {
+      score += 1;
+      showNotification(`Good! +1`, 'success', 800);
+    } else {
+      score += proposedWord.length;
+      showNotification(`Great! +${proposedWord.length}`, 'success', 800);
+    }
+    currentWord = '';
   }
 </script>
 
@@ -47,6 +108,17 @@
       <div class="score">Score: {score}</div>
     </div>
 
+    <!-- Notification message -->
+    <div 
+      class="notification" 
+      class:visible={notification.show}
+      class:error={notification.type === 'error'}
+      class:success={notification.type === 'success'}
+      class:info={notification.type === 'info'}
+    >
+      {notification.message}
+    </div>
+
     <!-- Current word display -->
     <div class="current-word">
       {currentWord || 'Type or click letters'}
@@ -58,7 +130,7 @@
         {#each letters as letter, i}
           <button
             class="hex-button {letter === centerLetter ? 'center' : ''}"
-            on:click={() => handleLetterClick(letter)}
+            onclick={() => handleLetterClick(letter)}
           >
             {letter}
           </button>
@@ -68,9 +140,9 @@
 
     <!-- Control buttons -->
     <div class="controls">
-      <button on:click={handleDelete}>Delete</button>
-      <button on:click={handleCycle}>Cycle</button>
-      <button on:click={handleEnter}>Enter</button>
+      <button onclick={handleDelete}>Delete</button>
+      <button onclick={handleCycle}>Cycle</button>
+      <button onclick={handleEnter}>Enter</button>
     </div>
   </div>
 </main>
@@ -103,6 +175,8 @@
     gap: 0.5rem;
     margin: 1rem 0;
     min-height: 60px;
+    align-items: flex-start;
+    line-height: 1;
   }
 
   .word-chip {
@@ -110,6 +184,7 @@
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
     font-size: 0.9rem;
+    line-height: 1.4;
   }
 
   .score {
@@ -128,6 +203,35 @@
     margin-bottom: 2rem;
     min-height: 60px;
     color: #333;
+  }
+
+  .notification {
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none;
+  }
+
+  .notification.visible {
+    opacity: 1;
+  }
+
+  .notification.error {
+    background: #ff6b6b;
+  }
+
+  .notification.success {
+    background: #51cf66;
+  }
+
+  .notification.info {
+    background: #4dabf7;
   }
 
   .hexagons {
