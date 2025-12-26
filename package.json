@@ -1,0 +1,24 @@
+{
+  "name": "spelling-bee",
+  "version": "1.0.0",
+  "description": "NYT Spelling Bee inspired word game for kids",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "build:client": "cd client && npm run build",
+    "postbuild:client": "mkdir -p server/public && cp -r client/dist/* server/public/",
+    "build": "npm run build:client && npm run postbuild:client",
+    "start": "cd server && npm start",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev"
+  },
+  "keywords": [
+    "spelling-bee",
+    "word-game",
+    "educational"
+  ],
+  "author": "",
+  "license": "MIT"
+}
