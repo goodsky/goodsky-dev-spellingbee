@@ -646,7 +646,6 @@
 
   .hex-button:disabled:hover {
     background: white;
-    transform: none;
   }
 
   .hex-button.center:disabled:hover {
