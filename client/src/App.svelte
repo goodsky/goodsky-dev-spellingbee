@@ -25,6 +25,7 @@
   let isLoadingDictionary = $state(true);
   let menuOpen = $state(false);
   let kidAssistMode = $state(false);
+  let wordsListExpanded = $state(false);
   
   // Get a random unfound scoring word for Kid Assist mode
   let hintWord = $derived(
@@ -32,6 +33,12 @@
       ? getKidAssistWord()
       : ''
   );  
+  
+  // Game completion states
+  let allWordsFound = $derived(
+    scoringWords.length > 0 && foundWords.length === scoringWords.length
+  );
+  let noPossibleWords = $derived(scoringWords.length === 0 && !isLoadingDictionary);
   
   // Notification system
   let notification = $state({ show: false, message: 'Blank', type: 'error' });
@@ -143,6 +150,10 @@
     kidAssistMode = !kidAssistMode;
   }
 
+  function toggleWordsList() {
+    wordsListExpanded = !wordsListExpanded;
+  }
+
   function closeMenu() {
     if (menuOpen) {
       menuOpen = false;
@@ -195,9 +206,16 @@
 
     <!-- Found words section -->
     <div class="found-words">
-      <h2>Found Words ({foundWords.length}/{scoringWords.length})</h2>
-      <div class="words-list">
-        {#each foundWords as word}
+      <div class="found-words-header">
+        <h2>Found Words ({foundWords.length}/{scoringWords.length})</h2>
+        {#if foundWords.length > 0}
+          <button class="expand-button" onclick={toggleWordsList}>
+            {wordsListExpanded ? '▼' : '▶'}
+          </button>
+        {/if}
+      </div>
+      <div class="words-list" class:expanded={wordsListExpanded}>
+        {#each foundWords.toReversed() as word}
           <span class="word-chip">{word}</span>
         {/each}
       </div>
@@ -217,7 +235,11 @@
 
     <!-- Current word display -->
     <div class="current-word" class:complete={kidAssistMode && hintWord && currentWord.length === hintWord.length}>
-      {#if kidAssistMode && hintWord}
+      {#if allWordsFound}
+        <span class="congrats">🎉 Congratulations! You found all the words! 🎉</span>
+      {:else if noPossibleWords}
+        <span class="apology">😕 Sorry, no valid words for these letters. Please start a new puzzle.</span>
+      {:else if kidAssistMode && hintWord}
         {#each hintWord.split('') as letter, i}
           <span class:ghost={i >= currentWord.length}>
             {i < currentWord.length ? currentWord[i] : letter}
@@ -237,6 +259,7 @@
           <button
             class="hex-button {letter === centerLetter ? 'center' : ''}"
             onclick={() => handleLetterClick(letter)}
+            disabled={allWordsFound || noPossibleWords}
           >
             {letter}
           </button>
@@ -246,9 +269,9 @@
 
     <!-- Control buttons -->
     <div class="controls">
-      <button class="delete" onclick={handleDelete}>Delete</button>
-      <button onclick={handleCycle}><img src="/cycle.svg" alt="Cycle" /></button>
-      <button class="enter" onclick={handleEnter}>Enter</button>
+      <button class="delete" onclick={handleDelete} disabled={allWordsFound || noPossibleWords}>Delete</button>
+      <button onclick={handleCycle} disabled={allWordsFound || noPossibleWords}><img src="/cycle.svg" alt="Cycle" /></button>
+      <button class="enter" onclick={handleEnter} disabled={allWordsFound || noPossibleWords}>Enter</button>
     </div>
   </div>
 </main>
@@ -260,6 +283,7 @@
     align-items: center;
     min-height: 100vh;
     background-color: #f5f5f5;
+    padding: 1rem 0;
   }
 
   .menu-backdrop {
@@ -271,7 +295,7 @@
   .game-container {
     max-width: 600px;
     width: 100%;
-    padding: 2rem;
+    padding: 1rem;
   }
 
   .header {
@@ -381,14 +405,55 @@
     margin-bottom: 1rem;
   }
 
+  .found-words-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .found-words-header h2 {
+    margin: 0;
+  }
+
+  .expand-button {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #666;
+    transition: transform 0.2s;
+  }
+
+  .expand-button:hover {
+    color: #333;
+  }
+
   .words-list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.5rem;
     margin: 1rem 0;
     min-height: 30px;
-    align-items: flex-start;
+    max-height: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: center;
     line-height: 1;
+    transition: max-height 0.3s ease-out;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .words-list::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .words-list.expanded {
+    flex-wrap: wrap;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .word-chip {
@@ -407,14 +472,16 @@
 
   .current-word {
     background: white;
-    padding: 1.5rem;
+    padding: 1rem;
     text-align: center;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: bold;
     border-radius: 8px;
-    margin-bottom: 2rem;
-    min-height: 60px;
+    margin-bottom: 1.5rem;
+    min-height: 50px;
     color: #333;
+    user-select: none;
+    cursor: default;
   }
 
   .current-word.complete {
@@ -427,6 +494,32 @@
 
   .current-word .cursor {
     animation: blink 1s step-end infinite;
+  }
+
+  .current-word .congrats,
+  .current-word .apology {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .current-word .congrats {
+    color: #51cf66;
+  }
+
+  .current-word .apology {
+    color: #ff6b6b;
+  }
+
+  .current-word .congrats,
+  .current-word .apology {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .current-word .congrats {
+    color: #51cf66;
+  }
+
+  .current-word .apology {
+    color: #ff6b6b;
   }
 
   @keyframes blink {
@@ -468,20 +561,20 @@
   }
 
   .hexagons {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .hex-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 0.75rem;
     max-width: 300px;
     margin: 0 auto;
   }
 
   .hex-button {
     aspect-ratio: 1;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
     font-weight: bold;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -498,6 +591,20 @@
   .hex-button.center {
     background: #ffd700;
     border-color: #ffb700;
+  }
+
+  .hex-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .hex-button:disabled:hover {
+    background: white;
+    transform: none;
+  }
+
+  .hex-button.center:disabled:hover {
+    background: #ffd700;
   }
 
   .controls {
@@ -538,5 +645,60 @@
 
   .controls button.enter:hover {
     background: #40c057;
+  }
+
+  .controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .controls button.delete:disabled:hover {
+    background: #ff6b6b;
+  }
+
+  .controls button.enter:disabled:hover {
+    background: #51cf66;
+  }
+
+  /* Responsive adjustments for small screens */
+  @media (max-height: 700px) {
+    .game-container {
+      padding: 0.5rem;
+    }
+
+    .found-words {
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .current-word {
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      min-height: 40px;
+    }
+
+    .hexagons {
+      margin-bottom: 1rem;
+    }
+
+    .hex-grid {
+      gap: 0.5rem;
+      max-width: 250px;
+    }
+
+    .controls button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .game-container {
+      padding: 0.5rem;
+    }
+
+    .hex-grid {
+      max-width: 220px;
+    }
   }
 </style>
