@@ -24,6 +24,14 @@
   );
   let isLoadingDictionary = $state(true);
   let menuOpen = $state(false);
+  let kidAssistMode = $state(false);
+  
+  // Get a random unfound scoring word for Kid Assist mode
+  let hintWord = $derived(
+    kidAssistMode 
+      ? getKidAssistWord()
+      : ''
+  );  
   
   // Notification system
   let notification = $state({ show: false, message: 'Blank', type: 'error' });
@@ -55,6 +63,11 @@
       isLoadingDictionary = false;
     }
   }
+
+  function getKidAssistWord() {
+    return scoringWords.find(word => word.startsWith(currentWord) && !foundWords.includes(word)) || '';
+  }
+
   // Load dictionary on mount
   fetchDictionary();
 
@@ -126,6 +139,10 @@
     menuOpen = !menuOpen;
   }
 
+  function toggleKidAssist() {
+    kidAssistMode = !kidAssistMode;
+  }
+
   function closeMenu() {
     if (menuOpen) {
       menuOpen = false;
@@ -160,6 +177,14 @@
   <div class="game-container">
     <!-- Menu bar at top -->
     <div class="header">
+      <button 
+        class="kid-assist-button" 
+        class:active={kidAssistMode}
+        onclick={toggleKidAssist}
+      >
+        Kid Assist
+        <span class="status-box">{kidAssistMode ? 'ON' : 'OFF'}</span>
+      </button>
       <button class="menu-button" onclick={toggleMenu}>☰</button>
       {#if menuOpen}
         <div class="menu-dropdown">
@@ -191,8 +216,18 @@
     </div>
 
     <!-- Current word display -->
-    <div class="current-word">
-      {currentWord || 'Type or click letters'}
+    <div class="current-word" class:complete={kidAssistMode && hintWord && currentWord.length === hintWord.length}>
+      {#if kidAssistMode && hintWord}
+        {#each hintWord.split('') as letter, i}
+          <span class:ghost={i >= currentWord.length}>
+            {i < currentWord.length ? currentWord[i] : letter}
+          </span>
+        {/each}
+      {:else if currentWord}
+        {currentWord}
+      {:else}
+        <span class="cursor">_</span>
+      {/if}
     </div>
 
     <!-- Hexagon buttons (placeholder - we'll make these actual hexagons) -->
@@ -211,9 +246,9 @@
 
     <!-- Control buttons -->
     <div class="controls">
-      <button onclick={handleDelete}>Delete</button>
+      <button class="delete" onclick={handleDelete}>Delete</button>
       <button onclick={handleCycle}><img src="/cycle.svg" alt="Cycle" /></button>
-      <button onclick={handleEnter}>Enter</button>
+      <button class="enter" onclick={handleEnter}>Enter</button>
     </div>
   </div>
 </main>
@@ -241,9 +276,47 @@
 
   .header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
     position: relative;
+  }
+
+  .kid-assist-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+
+  .kid-assist-button:hover {
+    background: #f0f0f0;
+  }
+
+  .kid-assist-button.active {
+    background: #4dabf7;
+    color: white;
+    border-color: #339af0;
+  }
+
+  .status-box {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .kid-assist-button.active .status-box {
+    background: rgba(255, 255, 255, 0.3);
   }
 
   .menu-button {
@@ -344,6 +417,27 @@
     color: #333;
   }
 
+  .current-word.complete {
+    color: #51cf66;
+  }
+
+  .current-word .ghost {
+    opacity: 0.25;
+  }
+
+  .current-word .cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    50.01%, 100% {
+      opacity: 0;
+    }
+  }
+
   .notification {
     color: white;
     padding: 1rem;
@@ -424,5 +518,25 @@
 
   .controls button:hover {
     background: #f0f0f0;
+  }
+
+  .controls button.delete {
+    background: #ff6b6b;
+    border-color: #fa5252;
+    color: white;
+  }
+
+  .controls button.delete:hover {
+    background: #fa5252;
+  }
+
+  .controls button.enter {
+    background: #51cf66;
+    border-color: #40c057;
+    color: white;
+  }
+
+  .controls button.enter:hover {
+    background: #40c057;
   }
 </style>
