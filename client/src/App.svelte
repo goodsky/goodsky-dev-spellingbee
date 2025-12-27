@@ -50,6 +50,14 @@
     lettersParam ? lettersParam.toUpperCase().split('') : generateRandomLetters()
   );
   let centerLetter = $state(centerLetterParam ? centerLetterParam.toUpperCase() : (letters[0] || 'A'));
+  
+  // Ensure center letter is at index 3 (middle of second row)
+  const ensureCenterAtIndex3 = (lettersArray, center) => {
+    const filtered = lettersArray.filter(l => l !== center);
+    return [...filtered.slice(0, 3), center, ...filtered.slice(3)];
+  };
+  
+  letters = ensureCenterAtIndex3(letters, centerLetter);
 
   // Fetch valid words from API
   async function fetchDictionary() {
@@ -97,10 +105,10 @@
   }
 
   function handleCycle() {
-    // Shuffle the outer letters (keep center fixed)
+    // Shuffle the outer letters (keep center fixed at index 3)
     const outer = letters.filter(l => l !== centerLetter);
     const shuffled = outer.sort(() => Math.random() - 0.5);
-    letters = [centerLetter, ...shuffled];
+    letters = [...shuffled.slice(0, 3), centerLetter, ...shuffled.slice(3)];
   }
 
   function handleEnter() {
@@ -162,8 +170,9 @@
 
   function resetPuzzle() {
     // Generate new random letters
-    letters = generateRandomLetters();
-    centerLetter = letters[0];
+    const newLetters = generateRandomLetters();
+    centerLetter = newLetters[0];
+    letters = ensureCenterAtIndex3(newLetters, centerLetter);
     
     // Reset game state
     currentWord = '';
@@ -566,14 +575,48 @@
 
   .hex-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
     gap: 0.75rem;
-    max-width: 300px;
+    max-width: 350px;
     margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Honeycomb pattern - centered rows */
+  /* Top row - 2 buttons offset to center */
+  .hex-button:nth-child(1) { 
+    grid-column: 1;
+    grid-row: 1;
+    transform: translateX(50%);
+  }
+  .hex-button:nth-child(2) { 
+    grid-column: 2;
+    grid-row: 1;
+    transform: translateX(50%);
+  }
+  
+  /* Middle row - 3 buttons fill all columns */
+  .hex-button:nth-child(3) { grid-column: 1; grid-row: 2; }
+  .hex-button:nth-child(4) { grid-column: 2; grid-row: 2; }
+  .hex-button:nth-child(5) { grid-column: 3; grid-row: 2; }
+  
+  /* Bottom row - 2 buttons offset to center */
+  .hex-button:nth-child(6) { 
+    grid-column: 1;
+    grid-row: 3;
+    transform: translateX(50%);
+  }
+  .hex-button:nth-child(7) { 
+    grid-column: 2;
+    grid-row: 3;
+    transform: translateX(50%);
   }
 
   .hex-button {
-    aspect-ratio: 1;
+    width: 100px;
+    height: 100px;
     font-size: clamp(1.2rem, 4vw, 1.5rem);
     font-weight: bold;
     border: 2px solid #ddd;
@@ -585,7 +628,10 @@
 
   .hex-button:hover {
     background: #f0f0f0;
-    transform: scale(1.05);
+  }
+  
+  .hex-button:active {
+    background: #e0e0e0;
   }
 
   .hex-button.center {
