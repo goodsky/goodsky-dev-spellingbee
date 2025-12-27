@@ -1,4 +1,6 @@
 <script>
+  import ReportWord from './ReportWord.svelte';
+
   // Parse URL parameters for puzzle configuration
   const urlParams = new URLSearchParams(window.location.search);
   const lettersParam = urlParams.get('letters');
@@ -32,6 +34,9 @@
   let menuOpen = $state(false);
   let kidAssistMode = $state(false);
   let wordsListExpanded = $state(false);
+  let reportModalOpen = $state(false);
+  let lastSubmittedWord = $state('');
+  let lastWordWasValid = $state(false);
   
   // Get a random unfound scoring word for Kid Assist mode
   let hintWord = $derived(
@@ -128,17 +133,23 @@
 
     // Check if word is in valid dictionary
     if (!validWords.includes(proposedWord)) {
+      lastSubmittedWord = proposedWord;
+      lastWordWasValid = false;
       showNotification('Not in word list!', 'error');
       return;
     }
 
     // Check if word is missing center letter
     if (!proposedWord.includes(centerLetter)) {
+      lastSubmittedWord = proposedWord;
+      lastWordWasValid = false;
       showNotification(`Must include letter "${centerLetter}"!`, 'error');
       return;
     }
 
     // Valid word!
+    lastSubmittedWord = proposedWord;
+    lastWordWasValid = true;
     foundWords = [...foundWords, proposedWord];
     if (proposedWord.length === minWordLength) {
       score += 1;
@@ -168,6 +179,19 @@
     }
   }
 
+  function openReportModal() {
+    reportModalOpen = true;
+    menuOpen = false;
+  }
+
+  function closeReportModal() {
+    reportModalOpen = false;
+  }
+
+  function handleReportSuccess({ success, message, type }) {
+    showNotification(message, type);
+  }
+
   function resetPuzzle() {
     // Generate new random letters
     const newLetters = generateRandomLetters();
@@ -193,6 +217,15 @@
   <div class="menu-backdrop" onclick={closeMenu} onkeydown={closeMenu} role="button" tabindex="-1"></div>
 {/if}
 
+<!-- Report Word Modal -->
+<ReportWord 
+  isOpen={reportModalOpen} 
+  onClose={closeReportModal}
+  onSuccess={handleReportSuccess}
+  initialWord={lastSubmittedWord}
+  initialType={lastWordWasValid ? 'remove' : 'add'}
+/>
+
 <main>
   <div class="game-container">
     <!-- Menu bar at top -->
@@ -209,6 +242,7 @@
       {#if menuOpen}
         <div class="menu-dropdown">
           <button class="menu-item" onclick={resetPuzzle}>New Puzzle</button>
+          <button class="menu-item" onclick={openReportModal}>Report Word</button>
         </div>
       {/if}
     </div>

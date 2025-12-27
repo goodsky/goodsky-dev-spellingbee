@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Build output - server serves built client files
 server/public/
+
+# App storage
+server/storage/

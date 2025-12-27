@@ -1,3 +1,21 @@
+### Get the report
+GET http://localhost:3000/api/dictionary/report
+
+
+### Report a word
+POST http://localhost:3000/api/dictionary/report
+Content-Type: application/json
+
+{
+    "word": "SKYLER",
+    "type": "remove"
+}
+
+
+### Clear the report
+DELETE http://localhost:3000/api/dictionary/report
+
+
 ### Get the dictionary
 POST http://localhost:3000/api/dictionary
 Content-Type: application/json
@@ -6,3 +24,4 @@ Content-Type: application/json
     "letters": ["a", "b", "c", "d", "e", "f", "g"],
     "minLength": 4
 }
+
