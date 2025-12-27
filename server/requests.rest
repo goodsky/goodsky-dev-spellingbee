@@ -1,3 +1,21 @@
+### =================
+### Production
+### =================
+
+## Get the reported words
+GET https://spellingbee.goodsky.dev/api/dictionary/report
+
+
+
+### Clear the report
+DELETE https://spellingbee.goodsky.dev/api/dictionary/report
+
+
+### =================
+### DEVELOPMENT
+### =================
+
+
 ### Get the report
 GET http://localhost:3000/api/dictionary/report
 

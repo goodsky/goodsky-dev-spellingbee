@@ -50,7 +50,7 @@ def filter_dictionary(dict_file, filter_file, whatif=False):
     if not whatif:
         with open(dict_file, 'w') as f:
             for word in kept_words:
-                f.write(word + '\n')
+                f.write(word.upper() + '\n')
 
     # Print report
     print(f"\n=== Dictionary Filtering Report ===")
