@@ -1,6 +1,4 @@
-aa
 aardvark
-aargh
 aback
 abacus
 abandon
@@ -8,7 +6,6 @@ abandoned
 abandoning
 abandonment
 abandons
-abba
 abbey
 abbot
 abbots
@@ -197,7 +194,6 @@ acrobat
 across
 act
 acted
-actin
 acting
 action
 actionable
@@ -405,8 +401,6 @@ afternoons
 afterthought
 afterward
 afterwards
-ag
-aga
 again
 against
 age
@@ -430,7 +424,6 @@ aggressively
 aggressor
 agile
 agility
-agin
 aging
 agitate
 agitated
@@ -455,7 +448,6 @@ ahead
 ahem
 ahold
 ahoy
-ai
 aid
 aide
 aided
@@ -473,7 +465,6 @@ aiming
 aimless
 aimlessly
 aims
-ain
 air
 airborne
 aircraft
@@ -500,12 +491,9 @@ airways
 aisle
 aisles
 ajar
-al
-ala
 alabaster
 alameda
 alamo
-alan
 alarm
 alarmed
 alarming
@@ -556,7 +544,6 @@ alike
 alimony
 alive
 all
-allee
 allegation
 allegations
 alleged
@@ -587,7 +574,6 @@ alluding
 allure
 alluring
 ally
-alma
 almighty
 almond
 almonds
@@ -606,7 +592,6 @@ alphabetized
 alpine
 already
 alright
-als
 also
 alt
 altar
@@ -632,9 +617,6 @@ aluminum
 alumni
 alumnus
 always
-am
-ama
-amah
 amaretto
 amassed
 amateur
@@ -669,12 +651,8 @@ amendment
 amendments
 amends
 amenities
-ami
 amiable
 amicable
-amigo
-amigos
-amin
 amino
 amiss
 ammo
@@ -706,7 +684,6 @@ amusement
 amuses
 amusing
 an
-ana
 anachronism
 anaesthetic
 anagram
@@ -736,7 +713,6 @@ ancient
 ancients
 and
 android
-ane
 anecdote
 anecdotes
 anemia
@@ -750,7 +726,6 @@ aneurysm
 anew
 angel
 angels
-angelus
 anger
 angina
 angiogram
@@ -758,14 +733,12 @@ angioplasty
 angle
 angles
 angling
-angora
 angrier
 angrily
 angry
 angst
 anguish
 anguished
-ani
 animal
 animals
 animated
@@ -774,7 +747,6 @@ animosity
 anise
 ankle
 ankles
-anna
 annals
 annex
 annihilate
@@ -804,7 +776,6 @@ anoint
 anointed
 anomalies
 anomaly
-anon
 anonymity
 anonymous
 anorexia
@@ -830,7 +801,6 @@ anthrax
 anthropologist
 anthropologists
 anthropology
-anti
 antibiotic
 antibiotics
 antibodies
@@ -869,7 +839,6 @@ anyplace
 anything
 anytime
 anyway
-anyways
 anywhere
 apache
 apart
@@ -984,7 +953,6 @@ aptly
 aqua
 aquarium
 aquatic
-ar
 arachnid
 arachnids
 arbitrary
@@ -1012,7 +980,6 @@ are
 area
 areas
 arena
-arf
 argentine
 argon
 arguably
@@ -1026,7 +993,6 @@ arguments
 argyle
 aria
 arid
-ariel
 aright
 arise
 arises
@@ -1076,8 +1042,6 @@ arrogant
 arrow
 arrowhead
 arrows
-arroyo
-arse
 arsenal
 arsenic
 arson
@@ -1161,8 +1125,6 @@ assessing
 assessment
 asset
 assets
-asshole
-assholes
 assign
 assigned
 assigning
@@ -1233,8 +1195,6 @@ atrocious
 atrocities
 atrophied
 atropine
-att
-attaboy
 attach
 attache
 attached
@@ -1301,7 +1261,6 @@ auger
 aught
 augmentation
 august
-auk
 auld
 aunt
 auntie
@@ -1345,7 +1304,6 @@ autopsies
 autopsy
 autumn
 auxiliary
-ava
 availability
 available
 avalanche
@@ -1369,7 +1327,6 @@ avoidance
 avoided
 avoiding
 avoids
-aw
 await
 awaiting
 awaits
@@ -1394,14 +1351,11 @@ awkward
 awkwardly
 awkwardness
 awoke
-awol
 awry
 ax
 axe
-axel
 axis
 axle
-ay
 aye
 ba
 baa

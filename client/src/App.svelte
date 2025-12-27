@@ -13,6 +13,12 @@
     return shuffled.slice(0, 7);
   }
 
+  // Ensure center letter is at index 3 (middle of second row)
+  const ensureCenterAtIndex3 = (lettersArray, center) => {
+    const filtered = lettersArray.filter(l => l !== center);
+    return [...filtered.slice(0, 3), center, ...filtered.slice(3)];
+  };
+
   // Game state
   let currentWord = $state('');
   let minWordLength = $state(4);
@@ -46,18 +52,12 @@
 
   // Puzzle letters - configurable via URL parameters or randomized
   // Example: ?letters=ABCDEFG&centerLetter=A
-  let letters = $state(
-    lettersParam ? lettersParam.toUpperCase().split('') : generateRandomLetters()
-  );
-  let centerLetter = $state(centerLetterParam ? centerLetterParam.toUpperCase() : (letters[0] || 'A'));
-  
-  // Ensure center letter is at index 3 (middle of second row)
-  const ensureCenterAtIndex3 = (lettersArray, center) => {
-    const filtered = lettersArray.filter(l => l !== center);
-    return [...filtered.slice(0, 3), center, ...filtered.slice(3)];
-  };
-  
-  letters = ensureCenterAtIndex3(letters, centerLetter);
+  let initialLetters = lettersParam ? lettersParam.toUpperCase().split('') : generateRandomLetters();
+  const initialCenter = centerLetterParam ? centerLetterParam.toUpperCase() : initialLetters[0];
+  initialLetters = ensureCenterAtIndex3(initialLetters, initialCenter);
+
+  let centerLetter = $state(initialCenter);
+  let letters = $state(initialLetters);
 
   // Fetch valid words from API
   async function fetchDictionary() {
@@ -190,7 +190,7 @@
 
 <!-- Backdrop to close menu when clicking outside -->
 {#if menuOpen}
-  <div class="menu-backdrop" onclick={closeMenu}></div>
+  <div class="menu-backdrop" onclick={closeMenu} onkeydown={closeMenu} role="button" tabindex="-1"></div>
 {/if}
 
 <main>
