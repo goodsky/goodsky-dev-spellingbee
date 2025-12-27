@@ -1641,8 +1641,6 @@ bass
 bassett
 bassinet
 bassoon
-bastard
-bastards
 baste
 bastille
 bat
@@ -2029,10 +2027,6 @@ bison
 bisque
 bistro
 bit
-bitch
-bitches
-bitching
-bitchy
 bite
 bites
 biting
@@ -2766,8 +2760,6 @@ bullies
 bullion
 bullpen
 bulls
-bullshit
-bullshitting
 bully
 bum
 bumble
@@ -3600,7 +3592,6 @@ chickened
 chickening
 chickenpox
 chickens
-chickenshit
 chicks
 chico
 chief
@@ -5343,8 +5334,6 @@ cummerbund
 cumulative
 cuneiform
 cunning
-cunt
-cunts
 cup
 cupboard
 cupboards
@@ -5492,11 +5481,6 @@ damaged
 damages
 damaging
 dame
-damn
-damnable
-damned
-damnedest
-damning
 damp
 dampened
 dampener
@@ -6162,12 +6146,6 @@ dibs
 dice
 diced
 dicey
-dick
-dickens
-dickie
-dicking
-dicks
-dicky
 dictate
 dictated
 dictates
@@ -9144,13 +9122,6 @@ fry
 fryer
 frying
 fuchsia
-fuck
-fucked
-fucker
-fuckers
-fucking
-fucks
-fuckup
 fudge
 fudged
 fudging
@@ -10846,7 +10817,6 @@ horsemen
 horsepower
 horseradish
 horses
-horseshit
 horsey
 horsing
 horticulture
@@ -13664,7 +13634,6 @@ matrimony
 matrix
 matron
 mats
-matt
 matted
 matter
 mattered
@@ -14805,8 +14774,6 @@ nicotine
 niece
 nieces
 nifty
-nigger
-niggers
 nigh
 night
 nightcap
@@ -17514,8 +17481,6 @@ pushing
 pushover
 pushy
 puss
-pussies
-pussy
 pussycat
 put
 putrid
@@ -19957,11 +19922,6 @@ shirking
 shirt
 shirtless
 shirts
-shit
-shithead
-shits
-shitting
-shitty
 shiv
 shiva
 shiver
