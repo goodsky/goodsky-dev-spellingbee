@@ -5,6 +5,7 @@
   const urlParams = new URLSearchParams(window.location.search);
   const lettersParam = urlParams.get('letters');
   const centerLetterParam = urlParams.get('centerLetter');
+  const minWordLengthParam = urlParams.get('minWordLength');
 
   // Common letters for random puzzle generation
   const commonLetters = 'AEIOURSTNLCDHPMBGFYWKVXZJQ'.split('');
@@ -32,7 +33,7 @@
 
   // Game state
   let currentWord = $state('');
-  let minWordLength = $state(4);
+  let minWordLength = $state(minWordLengthParam ? parseInt(minWordLengthParam) : 4);
   let foundWords = $state([]);
   let score = $state(0);
   let validWords = $state([]);
@@ -260,6 +261,26 @@
     showNotification(message, type);
   }
 
+  async function shareGame() {
+    const lettersParam = letters.filter(l => l !== centerLetter).join('') + centerLetter;
+    let url = `${window.location.origin}${window.location.pathname}?letters=${lettersParam}&centerLetter=${centerLetter}`;
+    
+    // Only add minWordLength if it's not the default
+    if (minWordLength !== 4) {
+      url += `&minWordLength=${minWordLength}`;
+    }
+    
+    try {
+      await navigator.clipboard.writeText(url);
+      showNotification('Link copied to clipboard!', 'success', 1500);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      showNotification('Failed to copy link', 'error');
+    }
+    
+    menuOpen = false;
+  }
+
   async function resetPuzzle() {
     // Reset game state
     currentWord = '';
@@ -305,6 +326,7 @@
       {#if menuOpen}
         <div class="menu-dropdown">
           <button class="menu-item" onclick={resetPuzzle}>New Puzzle</button>
+          <button class="menu-item" onclick={shareGame}>Share Game</button>
           <button class="menu-item" onclick={openReportModal}>Report Word</button>
           <button class="menu-item" class:active={hintMode} onclick={toggleHintMode}>
             Hint Mode: <span class="status-box">{hintMode ? 'ON' : 'OFF'}</span>
