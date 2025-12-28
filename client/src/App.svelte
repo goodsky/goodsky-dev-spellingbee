@@ -33,6 +33,7 @@
   let isLoadingDictionary = $state(true);
   let menuOpen = $state(false);
   let kidAssistMode = $state(false);
+  let hintMode = $state(false);
   let wordsListExpanded = $state(false);
   let reportModalOpen = $state(false);
   let lastSubmittedWord = $state('');
@@ -116,6 +117,30 @@
     letters = [...shuffled.slice(0, 3), centerLetter, ...shuffled.slice(3)];
   }
 
+  function handleHint() {
+    const currentUpper = currentWord.toUpperCase();
+    
+    // Find all scoring words that start with current word
+    const matchingWords = scoringWords.filter(word => 
+      word.startsWith(currentUpper) && !foundWords.includes(word)
+    );
+    
+    if (matchingWords.length === 0) {
+      showNotification('No valid words start with those letters!', 'error');
+      return;
+    }
+
+    // Get the next letter from a random matching word
+    const randomWord = matchingWords[Math.floor(Math.random() * matchingWords.length)];
+
+    if (randomWord === currentUpper) {
+      return;
+    }
+    
+    const nextLetter = randomWord[currentWord.length];
+    currentWord += nextLetter;
+  }
+
   function handleEnter() {
     const proposedWord = currentWord.trim().toUpperCase();
     currentWord = '';
@@ -167,6 +192,10 @@
 
   function toggleKidAssist() {
     kidAssistMode = !kidAssistMode;
+  }
+
+  function toggleHintMode() {
+    hintMode = !hintMode;
   }
 
   function toggleWordsList() {
@@ -243,6 +272,9 @@
         <div class="menu-dropdown">
           <button class="menu-item" onclick={resetPuzzle}>New Puzzle</button>
           <button class="menu-item" onclick={openReportModal}>Report Word</button>
+          <button class="menu-item" class:active={hintMode} onclick={toggleHintMode}>
+            Hint Mode: <span class="status-box">{hintMode ? 'ON' : 'OFF'}</span>
+          </button>
         </div>
       {/if}
     </div>
@@ -314,6 +346,9 @@
     <div class="controls">
       <button class="delete" onclick={handleDelete} disabled={allWordsFound || noPossibleWords}>Delete</button>
       <button onclick={handleCycle} disabled={allWordsFound || noPossibleWords}><img src="/cycle.svg" alt="Cycle" /></button>
+      {#if hintMode}
+        <button class="hint" onclick={handleHint} disabled={allWordsFound || noPossibleWords}>💡</button>
+      {/if}
       <button class="enter" onclick={handleEnter} disabled={allWordsFound || noPossibleWords}>Enter</button>
     </div>
   </div>
@@ -431,6 +466,15 @@
 
   .menu-item:hover {
     background: #f0f0f0;
+  }
+
+  .menu-item.active {
+    background: #ffd43b;
+    color: #333;
+  }
+
+  .menu-item.active:hover {
+    background: #fcc419;
   }
 
   .menu-item:first-child {
@@ -724,6 +768,17 @@
 
   .controls button.enter:hover {
     background: #40c057;
+  }
+
+  .controls button.hint {
+    background: #ffd43b;
+    border-color: #fcc419;
+    font-size: 1.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .controls button.hint:hover {
+    background: #fcc419;
   }
 
   .controls button:disabled {
