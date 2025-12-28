@@ -36,7 +36,6 @@
         <p>Found a word that should be in the dictionary? Or found an invalid word?</p>
         <ul>
           <li>Use <strong>Report Word</strong> from the menu</li>
-          <li>Add missing words or report invalid ones</li>
         </ul>
       </div>
       <div class="modal-header">
