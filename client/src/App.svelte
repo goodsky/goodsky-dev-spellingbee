@@ -21,6 +21,15 @@
     return [...filtered.slice(0, 3), center, ...filtered.slice(3)];
   };
 
+  const calculateMaxPossibleScore = (words, minLength) => {
+    return words.reduce((total, word) => {
+      if (word.length >= minLength) {
+        return total + (word.length === minLength ? 1 : word.length);
+      }
+      return total;
+    }, 0);
+  };
+
   // Game state
   let currentWord = $state('');
   let minWordLength = $state(4);
@@ -29,6 +38,9 @@
   let validWords = $state([]);
   let scoringWords = $derived(
     validWords.filter(word => word.includes(centerLetter))
+  );
+  let maxPossibleScore = $derived(
+    calculateMaxPossibleScore(scoringWords, minWordLength)
   );
   let isLoadingDictionary = $state(true);
   let menuOpen = $state(false);
@@ -294,7 +306,15 @@
           <span class="word-chip">{word}</span>
         {/each}
       </div>
-      <div class="score">Score: {score}</div>
+      <div class="score-progress">
+        <div class="progress-bar">
+          <div class="progress-line"></div>
+          <div 
+            class="progress-marker" 
+            style="left: calc(30px + {maxPossibleScore > 0 ? (score / maxPossibleScore) : 0} * (100% - 60px))"
+          >{score}</div>
+        </div>
+      </div>
     </div>
 
     <!-- Notification message -->
@@ -551,10 +571,44 @@
     line-height: 1.4;
   }
 
-  .score {
+  .score-progress {
+    margin-top: 1rem;
+  }
+
+  .progress-bar {
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  .progress-line {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: #ddd;
+  }
+
+  .progress-marker {
+    position: absolute;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ffd43b;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateX(-18px);
+    transition: left 0.3s ease-out;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
-    font-size: 1.2rem;
-    color: #333;
+    font-size: 0.9rem;
+    color: black;
   }
 
   .current-word {
