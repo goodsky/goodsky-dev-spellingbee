@@ -294,17 +294,18 @@
     <!-- Found words section -->
     <div class="found-words">
       <div class="found-words-header">
-        <h2>Found Words ({foundWords.length}/{scoringWords.length})</h2>
+      </div>
+      <div class="words-list-container">
+        <div class="words-list" class:expanded={wordsListExpanded}>
+          {#each foundWords.toReversed() as word}
+            <span class="word-chip">{word}</span>
+          {/each}
+        </div>
         {#if foundWords.length > 0}
           <button class="expand-button" onclick={toggleWordsList}>
             {wordsListExpanded ? '▼' : '▶'}
           </button>
         {/if}
-      </div>
-      <div class="words-list" class:expanded={wordsListExpanded}>
-        {#each foundWords.toReversed() as word}
-          <span class="word-chip">{word}</span>
-        {/each}
       </div>
       <div class="score-progress">
         <div class="progress-bar">
@@ -331,17 +332,19 @@
     <!-- Current word display -->
     <div class="current-word" class:complete={kidAssistMode && hintWord && currentWord.length === hintWord.length}>
       {#if allWordsFound}
-        <span class="congrats">🎉 Congratulations! You found all the words! 🎉</span>
+        <span class="congrats">🎉 Congratulations! 🎉</span>
       {:else if noPossibleWords}
         <span class="apology">😕 Sorry, no valid words for these letters. Please start a new puzzle.</span>
       {:else if kidAssistMode && hintWord}
         {#each hintWord.split('') as letter, i}
-          <span class:ghost={i >= currentWord.length}>
+          <span class:ghost={i >= currentWord.length} class:center-letter={letter === centerLetter}>
             {i < currentWord.length ? currentWord[i] : letter}
           </span>
         {/each}
       {:else if currentWord}
-        {currentWord}
+        {#each currentWord.split('') as letter}
+          <span class:center-letter={letter === centerLetter}>{letter}</span>
+        {/each}
       {:else}
         <span class="cursor">_</span>
       {/if}
@@ -522,14 +525,26 @@
     margin: 0;
   }
 
+  .words-list-container {
+    position: relative;
+    margin: 0.25rem 0 1rem 0;
+  }
+
   .expand-button {
-    background: transparent;
-    border: none;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
     padding: 0.5rem;
     color: #666;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .expand-button:hover {
@@ -540,8 +555,7 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 0.5rem;
-    margin: 1rem 0;
-    min-height: 30px;
+    min-height: 40px;
     max-height: 40px;
     overflow-x: auto;
     overflow-y: hidden;
@@ -631,6 +645,18 @@
 
   .current-word .ghost {
     opacity: 0.25;
+  }
+
+  .current-word .ghost.center-letter {
+    color: inherit;
+  }
+
+  .current-word .center-letter {
+    color: #ffd43b;
+  }
+
+  .current-word.complete .center-letter {
+    color: #51cf66;
   }
 
   .current-word .cursor {
