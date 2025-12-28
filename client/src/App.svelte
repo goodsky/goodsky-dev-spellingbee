@@ -8,15 +8,6 @@
   const centerLetterParam = urlParams.get('centerLetter');
   const minWordLengthParam = urlParams.get('minWordLength');
 
-  // Common letters for random puzzle generation
-  const commonLetters = 'AEIOURSTNLCDHPMBGFYWKVXZJQ'.split('');
-
-  // Function to generate random letters
-  function generateRandomLetters() {
-    const shuffled = [...commonLetters].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 7);
-  }
-
   // Ensure center letter is at index 3 (middle of second row)
   const ensureCenterAtIndex3 = (lettersArray, center) => {
     const filtered = lettersArray.filter(l => l !== center);
@@ -381,12 +372,12 @@
     <!-- Notification message -->
     <div 
       class="notification" 
-      class:visible={notification.show}
+      class:visible={notification.show || allWordsFound}
       class:error={notification.type === 'error'}
-      class:success={notification.type === 'success'}
+      class:success={notification.type === 'success' || allWordsFound}
       class:info={notification.type === 'info'}
     >
-      {notification.message}
+      {allWordsFound ? 'Puzzle Complete!' : notification.message}
     </div>
 
     <!-- Current word display -->
@@ -711,7 +702,7 @@
     background: white;
     padding: 1rem;
     text-align: center;
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: 2rem;
     font-weight: bold;
     border-radius: 8px;
     margin-bottom: 1.5rem;
@@ -857,7 +848,7 @@
   .hex-button {
     width: 100px;
     height: 100px;
-    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    font-size: 2rem;
     font-weight: bold;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -899,10 +890,10 @@
   }
 
   .controls button {
-    padding: 0.75rem 1.0rem;
+    padding: 1.0rem 1.5rem;
     font-size: 1rem;
     border: 2px solid #ddd;
-    border-radius: 16px;
+    border-radius: 32px;
     background: white;
     cursor: pointer;
     transition: all 0.2s;
@@ -915,7 +906,8 @@
   .controls button.delete {
     background: #ff6b6b;
     border-color: #fa5252;
-    color: white;
+    color: black;
+
   }
 
   .controls button.delete:hover {
@@ -925,7 +917,7 @@
   .controls button.enter {
     background: #51cf66;
     border-color: #40c057;
-    color: white;
+    color: black;
   }
 
   .controls button.enter:hover {
@@ -933,8 +925,6 @@
   }
 
   .controls button.hint {
-    background: #ffd43b;
-    border-color: #fcc419;
     font-size: 1.5rem;
     padding: 0.75rem 1rem;
   }
@@ -980,6 +970,14 @@
     .hex-grid {
       gap: 0.5rem;
       max-width: 250px;
+      grid-template-columns: repeat(3, 70px);
+      grid-template-rows: repeat(3, 70px);
+    }
+
+    .hex-button {
+      width: 70px;
+      height: 70px;
+      font-size: 1.3rem;
     }
 
     .controls button {
@@ -995,6 +993,14 @@
 
     .hex-grid {
       max-width: 220px;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(3, 60px);
+    }
+
+    .hex-button {
+      width: 60px;
+      height: 60px;
+      font-size: 1.2rem;
     }
   }
 </style>
