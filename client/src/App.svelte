@@ -68,14 +68,31 @@
   let notification = $state({ show: false, message: 'Blank', type: 'error' });
   let notificationTimeout;
 
-  // Puzzle letters - configurable via URL parameters or randomized
+  // Puzzle letters - configurable via URL parameters or fetched from server
   // Example: ?letters=ABCDEFG&centerLetter=A
-  let initialLetters = lettersParam ? lettersParam.toUpperCase().split('') : generateRandomLetters();
-  const initialCenter = centerLetterParam ? centerLetterParam.toUpperCase() : initialLetters[0];
-  initialLetters = ensureCenterAtIndex3(initialLetters, initialCenter);
+  let centerLetter = $state('');
+  let letters = $state([]);
 
-  let centerLetter = $state(initialCenter);
-  let letters = $state(initialLetters);
+  // Fetch new game from server
+  async function fetchNewGame() {
+    try {
+      const response = await fetch(`/api/newgame?minLength=${minWordLength}`);
+      const data = await response.json();
+      
+      centerLetter = data.centerLetter;
+      letters = ensureCenterAtIndex3(data.letters, data.centerLetter);
+      validWords = data.validWords;
+      isLoadingDictionary = false;
+      
+      console.log(`New game generated with ${data.stats.wordCount} scoring words`);
+      console.log(`Total possible score: ${data.stats.totalScore}`);
+      console.log(`Heuristic score: ${data.stats.heuristicScore.toFixed(1)}`);
+    } catch (error) {
+      console.error('Error fetching new game:', error);
+      showNotification('Error loading new game', 'error');
+      isLoadingDictionary = false;
+    }
+  }
 
   // Fetch valid words from API
   async function fetchDictionary() {
@@ -101,8 +118,18 @@
     return scoringWords.find(word => word.startsWith(currentWord) && !foundWords.includes(word)) || '';
   }
 
-  // Load dictionary on mount
-  fetchDictionary();
+  // Initialize game on mount
+  if (lettersParam && centerLetterParam) {
+    // Use URL parameters
+    const initialLetters = lettersParam.toUpperCase().split('');
+    const initialCenter = centerLetterParam.toUpperCase();
+    centerLetter = initialCenter;
+    letters = ensureCenterAtIndex3(initialLetters, initialCenter);
+    fetchDictionary();
+  } else {
+    // Fetch smart random game from server
+    fetchNewGame();
+  }
 
   // Helper function to show notifications
   function showNotification(message, type = 'error', duration = 2000) {
@@ -233,21 +260,16 @@
     showNotification(message, type);
   }
 
-  function resetPuzzle() {
-    // Generate new random letters
-    const newLetters = generateRandomLetters();
-    centerLetter = newLetters[0];
-    letters = ensureCenterAtIndex3(newLetters, centerLetter);
-    
+  async function resetPuzzle() {
     // Reset game state
     currentWord = '';
     foundWords = [];
     score = 0;
     menuOpen = false;
-    
-    // Fetch new dictionary for the new letters
     isLoadingDictionary = true;
-    fetchDictionary();
+    
+    // Fetch new game from server
+    await fetchNewGame();
     
     showNotification('New puzzle!', 'info', 1000);
   }

@@ -6,7 +6,6 @@
 GET https://spellingbee.goodsky.dev/api/dictionary/report
 
 
-
 ### Clear the report
 DELETE https://spellingbee.goodsky.dev/api/dictionary/report
 
@@ -15,9 +14,12 @@ DELETE https://spellingbee.goodsky.dev/api/dictionary/report
 ### DEVELOPMENT
 ### =================
 
-
 ### Get the report
 GET http://localhost:3000/api/dictionary/report
+
+
+### Clear the report
+DELETE http://localhost:3000/api/dictionary/report
 
 
 ### Report a word
@@ -30,8 +32,8 @@ Content-Type: application/json
 }
 
 
-### Clear the report
-DELETE http://localhost:3000/api/dictionary/report
+### Get a New Game
+GET http://localhost:3000/api/newgame
 
 
 ### Get the dictionary
