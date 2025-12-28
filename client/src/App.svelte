@@ -1,5 +1,6 @@
 <script>
   import ReportWord from './ReportWord.svelte';
+  import Help from './Help.svelte';
 
   // Parse URL parameters for puzzle configuration
   const urlParams = new URLSearchParams(window.location.search);
@@ -45,6 +46,7 @@
   );
   let isLoadingDictionary = $state(true);
   let menuOpen = $state(false);
+  let howToPlayOpen = $state(false);
   let kidAssistMode = $state(false);
   let hintMode = $state(false);
   let wordsListExpanded = $state(false);
@@ -248,6 +250,14 @@
     }
   }
 
+  function openHowToPlay() {
+    howToPlayOpen = true;
+  }
+
+  function closeHowToPlay() {
+    howToPlayOpen = false;
+  }
+
   function openReportModal() {
     reportModalOpen = true;
     menuOpen = false;
@@ -301,6 +311,9 @@
   <div class="menu-backdrop" onclick={closeMenu} onkeydown={closeMenu} role="button" tabindex="-1"></div>
 {/if}
 
+<!-- How to Play Modal -->
+<Help isOpen={howToPlayOpen} onClose={closeHowToPlay} />
+
 <!-- Report Word Modal -->
 <ReportWord 
   isOpen={reportModalOpen} 
@@ -322,7 +335,10 @@
         Kid Assist
         <span class="status-box">{kidAssistMode ? 'ON' : 'OFF'}</span>
       </button>
-      <button class="menu-button" onclick={toggleMenu}>☰</button>
+      <div class="header-buttons">
+        <button class="help-button" onclick={openHowToPlay} title="How to Play">ⓘ</button>
+        <button class="menu-button" onclick={toggleMenu}>☰</button>
+      </div>
       {#if menuOpen}
         <div class="menu-dropdown">
           <button class="menu-item" onclick={resetPuzzle}>New Puzzle</button>
@@ -486,6 +502,32 @@
 
   .kid-assist-button.active .status-box {
     background: rgba(255, 255, 255, 0.3);
+  }
+
+  .header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .help-button {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+  }
+
+  .help-button:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
   }
 
   .menu-button {
