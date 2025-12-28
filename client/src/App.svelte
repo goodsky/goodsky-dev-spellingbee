@@ -565,10 +565,6 @@
     align-items: center;
   }
 
-  .found-words-header h2 {
-    margin: 0;
-  }
-
   .words-list-container {
     position: relative;
     margin: 0.25rem 0 1rem 0;
