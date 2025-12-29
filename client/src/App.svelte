@@ -742,7 +742,7 @@
     background: white;
     padding: 1rem;
     text-align: center;
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: 2rem;
     font-weight: bold;
     border-radius: 8px;
     margin-bottom: 1.5rem;
@@ -816,7 +816,7 @@
     color: white;
     padding: 1rem;
     text-align: center;
-    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-size: 1.2rem;
     font-weight: bold;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -849,8 +849,8 @@
 
   .hex-grid {
     display: grid;
-    grid-template-columns: repeat(3, min(90px, 20vw));
-    grid-template-rows: repeat(3, min(90px, 20vw));
+    grid-template-columns: repeat(3, min(100px, 20vw));
+    grid-template-rows: repeat(3, min(100px, 20vw));
     gap: 0.75rem;
     max-width: 350px;
     margin: 0 auto;
@@ -891,7 +891,7 @@
   .hex-button {
     width: 100%;
     height: 100%;
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: 2rem;
     font-weight: bold;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -935,7 +935,7 @@
 
   .controls button {
     padding: 0.75rem 1.25rem;
-    font-size: clamp(0.875rem, 3vw, 1rem);
+    font-size: 1rem;
     border: 2px solid #ddd;
     border-radius: 32px;
     background: white;
@@ -1009,7 +1009,7 @@
       padding: 0.5rem;
       margin-bottom: 0.5rem;
       min-height: 40px;
-      font-size: clamp(1.25rem, 4vw, 1.5rem);
+      font-size: clamp(1.5rem, 10vw, 2.0rem);
     }
 
     .notification {
