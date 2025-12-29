@@ -386,7 +386,7 @@
     </div>
 
     <!-- Spacer to push game elements to bottom -->
-    <div class="spacer"></div>
+    <div style="flex-grow: 1; min-height: 0;"></div>
 
     <!-- Game elements wrapper -->
     <div class="game-elements">
@@ -447,6 +447,9 @@
       <button class="enter" onclick={handleEnter} disabled={allWordsFound || noPossibleWords}>Enter</button>
     </div>
     </div>
+
+    <!-- Spacer to push game elements to bottom -->
+    <div style="flex-grow: 1.0; min-height: 0;"></div>
   </div>
 </main>
 
@@ -621,15 +624,8 @@
     flex-shrink: 0;
   }
 
-  .spacer {
-    flex-grow: 1;
-    min-height: 0;
-  }
-
   .game-elements {
     flex-shrink: 0;
-    padding-bottom: 10vh;
-    padding-bottom: 10dvh;
   }
 
   .found-words-header {
@@ -1027,20 +1023,6 @@
       grid-template-columns: repeat(3, min(70px, 18vw));
       grid-template-rows: repeat(3, min(70px, 18vw));
     }
-
-    .controls {
-      gap: 0.35rem;
-    }
-
-    .controls button {
-      padding: 0.5rem 0.75rem;
-      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-    }
-
-    .controls button.hint {
-      font-size: clamp(1.1rem, 3.5vw, 1.3rem);
-      padding: 0.5rem 0.75rem;
-    }
   }
 
   @media (max-width: 360px) {
@@ -1050,8 +1032,8 @@
 
     .hex-grid {
       max-width: 220px;
-      grid-template-columns: repeat(3, min(60px, 16vw));
-      grid-template-rows: repeat(3, min(60px, 16vw));
+      grid-template-columns: repeat(3, min(60px, 30vw));
+      grid-template-rows: repeat(3, min(60px, 30vw));
     }
   }
 
