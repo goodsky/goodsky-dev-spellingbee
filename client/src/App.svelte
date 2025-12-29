@@ -385,8 +385,13 @@
       </div>
     </div>
 
-    <!-- Notification message -->
-    <div 
+    <!-- Spacer to push game elements to bottom -->
+    <div class="spacer"></div>
+
+    <!-- Game elements wrapper -->
+    <div class="game-elements">
+      <!-- Notification message -->
+      <div 
       class="notification" 
       class:visible={notification.show || allWordsFound}
       class:error={notification.type === 'error'}
@@ -441,6 +446,7 @@
       {/if}
       <button class="enter" onclick={handleEnter} disabled={allWordsFound || noPossibleWords}>Enter</button>
     </div>
+    </div>
   </div>
 </main>
 
@@ -449,9 +455,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
     background-color: #f5f5f5;
-    padding: 1rem 0;
+    overflow: hidden;
   }
 
   .menu-backdrop {
@@ -463,7 +470,11 @@
   .game-container {
     max-width: 600px;
     width: 100%;
+    height: 100%;
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
   }
 
   .header {
@@ -472,6 +483,7 @@
     align-items: center;
     margin-bottom: 1rem;
     position: relative;
+    flex-shrink: 0;
   }
 
   .kid-assist-button {
@@ -492,9 +504,9 @@
   }
 
   .kid-assist-button.active {
-    background: #4dabf7;
-    color: white;
-    border-color: #339af0;
+    background: #ffd43b;
+    color: #333;
+    border-color: #fcc419;
   }
 
   .status-box {
@@ -605,7 +617,19 @@
     background: white;
     padding: 1rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .spacer {
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .game-elements {
+    flex-shrink: 0;
+    padding-bottom: 10vh;
+    padding-bottom: 10dvh;
   }
 
   .found-words-header {
@@ -718,7 +742,7 @@
     background: white;
     padding: 1rem;
     text-align: center;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: bold;
     border-radius: 8px;
     margin-bottom: 1.5rem;
@@ -726,6 +750,7 @@
     color: #333;
     user-select: none;
     cursor: default;
+    flex-shrink: 0;
   }
 
   .current-word.complete {
@@ -791,13 +816,14 @@
     color: white;
     padding: 1rem;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 4vw, 1.2rem);
     font-weight: bold;
     border-radius: 8px;
     margin-bottom: 1rem;
     opacity: 0;
     transition: opacity 0.3s ease-out;
     pointer-events: none;
+    flex-shrink: 0;
   }
 
   .notification.visible {
@@ -818,12 +844,13 @@
 
   .hexagons {
     margin-bottom: 1.5rem;
+    flex-shrink: 0;
   }
 
   .hex-grid {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: repeat(3, min(90px, 20vw));
+    grid-template-rows: repeat(3, min(90px, 20vw));
     gap: 0.75rem;
     max-width: 350px;
     margin: 0 auto;
@@ -862,9 +889,9 @@
   }
 
   .hex-button {
-    width: 100px;
-    height: 100px;
-    font-size: 2rem;
+    width: 100%;
+    height: 100%;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: bold;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -903,11 +930,12 @@
     display: flex;
     gap: 1rem;
     justify-content: center;
+    flex-shrink: 0;
   }
 
   .controls button {
-    padding: 1.0rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(0.875rem, 3vw, 1rem);
     border: 2px solid #ddd;
     border-radius: 32px;
     background: white;
@@ -963,60 +991,67 @@
   }
 
   /* Responsive adjustments for small screens */
-  @media (max-height: 700px) {
+  @media (max-height: 750px) {
     .game-container {
-      padding: 0.5rem;
+      padding: 0.25rem;
+    }
+
+    .header {
+      margin-bottom: 0.25rem;
     }
 
     .found-words {
-      padding: 0.75rem;
-      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
     .current-word {
-      padding: 0.75rem;
-      margin-bottom: 1rem;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
       min-height: 40px;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+    }
+
+    .notification {
+      padding: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
     .hexagons {
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     .hex-grid {
-      gap: 0.5rem;
+      gap: 0.35rem;
       max-width: 250px;
-      grid-template-columns: repeat(3, 70px);
-      grid-template-rows: repeat(3, 70px);
+      grid-template-columns: repeat(3, min(70px, 18vw));
+      grid-template-rows: repeat(3, min(70px, 18vw));
     }
 
-    .hex-button {
-      width: 70px;
-      height: 70px;
-      font-size: 1.3rem;
+    .controls {
+      gap: 0.35rem;
     }
 
     .controls button {
       padding: 0.5rem 0.75rem;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+    }
+
+    .controls button.hint {
+      font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+      padding: 0.5rem 0.75rem;
     }
   }
 
   @media (max-width: 360px) {
     .game-container {
-      padding: 0.5rem;
+      padding: 0.25rem;
     }
 
     .hex-grid {
       max-width: 220px;
-      grid-template-columns: repeat(3, 60px);
-      grid-template-rows: repeat(3, 60px);
-    }
-
-    .hex-button {
-      width: 60px;
-      height: 60px;
-      font-size: 1.2rem;
+      grid-template-columns: repeat(3, min(60px, 16vw));
+      grid-template-rows: repeat(3, min(60px, 16vw));
     }
   }
 
