@@ -43,7 +43,7 @@
       </div>
       <div class="modal-body">
         <ul>
-          <li>Developed by Skyler Goodell</li>
+          <li>Developed by <a href="mailto:goodsky@outlook.com">Skyler Goodell</a></li>
           <li>Inspired by the New York Times Spelling Bee</li>
           <li><a href="https://www.flaticon.com/free-icons/bee" title="bee icons">Bee icons created by juicy_fish - Flaticon</a></li>
         </ul>
