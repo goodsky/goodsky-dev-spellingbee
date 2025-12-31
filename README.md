@@ -1,2 +1,2 @@
-# goodsky-dev-spellingbee
-Spelling bee for my son
+# ⚠️⚠️⚠️ Deprecated ⚠️⚠️⚠️
+This repository has been migrated to https://github.com/goodsky/goodsky-dev-wordgames
